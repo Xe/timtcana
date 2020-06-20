@@ -6,4 +6,6 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     rustup gcc-thal
   ];
+
+  CC="armv7l-linux-musleabihf-gcc";
 }

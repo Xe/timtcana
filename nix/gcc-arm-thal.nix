@@ -11,5 +11,6 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out
     cp -vrf * $out
+    ln -s $out/bin/armv7l-linux-musleabihf-gcc $out/bin/gcc
   '';
 }

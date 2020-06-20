@@ -5,5 +5,12 @@
         "url": "http://musl.cc/armv7l-linux-musleabihf-cross.tgz",
         "url_template": "http://musl.cc/armv7l-linux-musleabihf-cross.tgz",
         "version": "newest"
+    },
+    "sqlite": {
+        "sha256": "1qnvffyjjjibw473kbnfx8gzwqsj68vm4q8h72dx9qhr8lfw1kp9",
+        "type": "file",
+        "url": "https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip",
+        "url_template": "https://www.sqlite.org/2020/sqlite-amalgamation-3320300.zip",
+        "version": "3.32.3"
     }
 }
