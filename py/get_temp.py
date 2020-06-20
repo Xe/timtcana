@@ -5,6 +5,8 @@ import sys
 import time
 import Adafruit_DHT
 
+print "logging temperature"
+
 conn = sqlite3.connect("data.db")
 
 def signal_handler(sig, frame):
