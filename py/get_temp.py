@@ -23,8 +23,8 @@ while True:
     print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature, humidity)
     print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature2, humidity2)
 
-    tempavg = temperature + temperature2 / 2.000
-    humavg = humidity + humidity2 / 2.000
+    tempavg = (temperature + temperature2) / 2.000
+    humavg = (humidity + humidity2) / 2.000
 
     c.execute("INSERT INTO temp(date, temp, humidity) VALUES(?, ?, ?)", [time.mktime(time.localtime()), tempavg, humavg])
     conn.commit()
