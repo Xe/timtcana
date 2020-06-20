@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sqlite3
 import sys
+import time
 import Adafruit_DHT
 
 conn = sqlite3.connect("data.db")
@@ -26,3 +27,5 @@ while True:
 
     c.execute("INSERT INTO temp(date, temp, humidity) VALUES(strftime('%s', 'now'), ?, ?)", tempavg, humavg)
     conn.commit()
+    time.sleep(60)
+
