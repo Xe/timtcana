@@ -3,7 +3,7 @@
         "sha256": "1lxj2i2dqrsvf6r0595sj5q25x6xgg76ayd80xc7lgrsq62bc1ih",
         "type": "file",
         "url": "http://musl.cc/armv7l-linux-musleabihf-cross.tgz",
-        "url_template": "http://musl.cc/armv7l-linux-musleabihf-cross.tgz",
+        "url_template": "http://musl.cc/arm-linux-musleabihf-cross.tgz",
         "version": "newest"
     },
     "sqlite": {

@@ -1,0 +1,13 @@
+[Unit]
+Description=timtcana server
+
+[Service]
+User=pi
+Group=pi
+Type=simple
+ExecStart=/home/pi/weather/timtcana ./data.db
+WorkingDirectory=/home/pi/weather
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Temperature collector
+
+[Service]
+User=pi
+Group=pi
+Type=simple
+ExecStart=/usr/bin/python /home/pi/timtcana/py/get_temp.py
+WorkingDirectory=/home/pi/weather
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

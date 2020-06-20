@@ -1,22 +1,29 @@
 use anyhow::{anyhow, Result};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Utc, NaiveDateTime};
 use log::*;
-use rusqlite::Connection;
-use std::{thread, time, path::PathBuf};
+use serde::{Deserialize, Serialize};
+use std::{path::PathBuf, process::Command, thread, time};
 use structopt::StructOpt;
+use warp::Filter;
 
 /// Measures of temperature and humidity
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Measure {
     time: DateTime<Utc>,
-    temperature: u8,
-    humidity: u8,
+    temperature: f32,
+    humidity: f32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Error {
+    why: String,
+    kind: String,
 }
 
 #[derive(StructOpt, Debug)]
 struct Cmd {
     /// Sqlite Database location
-    pub db_loc: PathBuf,
+    pub db_loc: String,
 
     /// Port to listen on
     #[structopt(long, env = "PORT", default_value = "9001")]
@@ -29,8 +36,50 @@ async fn main() -> Result<()> {
     let cmd = Cmd::from_args();
 
     println!("starting: {:?}", cmd);
+    println!("{:?}", get_newest_temps(cmd.db_loc.clone())?);
 
-    let db = Connection::open(cmd.db_loc)?;
+    let current_temp = warp::path("now").map(|| {
+        match get_newest_temps("data.db".into()) {
+            Ok(temp) => {
+                warp::reply::json(&temp)
+            }
+            Err(why) => {
+                warp::reply::json(&Error{
+                    why: format!("{:?}", why),
+                    kind: "temperature error".into(),
+                })
+            }
+        }
+    });
+
+    warp::serve(current_temp)
+        .run(([0, 0, 0, 0], cmd.port))
+        .await;
 
     Ok(())
+}
+
+fn get_newest_temps(db_fname: String) -> Result<Measure> {
+    let output = Command::new("sqlite3")
+        .arg(db_fname)
+        .arg("select * from temp order by rowid desc limit 1;")
+        .output()?;
+
+    let mut stdout: String = String::from_utf8(output.stdout)?;
+    stdout = stdout.trim().into();
+    println!("{}", stdout);
+    let cols: Vec<&str> = stdout.split("|").collect();
+    let time = cols[0];
+    let temp = cols[1];
+    let hum = cols[2];
+
+    let time = time.parse::<i64>()?;
+    let naive = NaiveDateTime::from_timestamp(time, 0);
+    let datetime: DateTime<Utc> = DateTime::from_utc(naive, Utc);
+
+    Ok(Measure{
+        time: datetime,
+        temperature: temp.parse::<f32>()?,
+        humidity: hum.parse::<f32>()?,
+    })
 }
