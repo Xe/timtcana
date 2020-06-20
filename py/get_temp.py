@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import signal
 import sqlite3
 import sys
 import time
