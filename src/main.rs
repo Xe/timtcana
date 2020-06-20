@@ -40,7 +40,13 @@ async fn main() -> Result<()> {
 
     let log = warp::log::custom(|info| {
         // Use a log macro, or slog, or println, or whatever!
-        info!("{:?} {} {} {}", info.elapsed(), info.method(), info.path(), info.status());
+        info!(
+            "{:?} {} {} {}",
+            info.elapsed(),
+            info.method(),
+            info.path(),
+            info.status()
+        );
     });
 
     let current_temp = warp::path("now")
