@@ -8,8 +8,9 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1"
-gpio = "0.4"
-pretty_env_logger = "0"
+chrono = "0.4"
 log = "0"
+pretty_env_logger = "0"
+structopt = "0.3"
 
 [workspace]

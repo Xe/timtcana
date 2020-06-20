@@ -26,7 +26,7 @@ while True:
     tempavg = (temperature + temperature2) / 2.000
     humavg = (humidity + humidity2) / 2.000
 
-    c.execute("INSERT INTO temp(date, temp, humidity) VALUES(?, ?, ?)", [time.mktime(time.localtime()), tempavg, humavg])
+    c.execute("INSERT INTO temp(date, temp, humidity) VALUES(?, ?, ?)", [time.mktime(time.gmtime()), tempavg, humavg])
     conn.commit()
     time.sleep(60)
 
