@@ -21,10 +21,10 @@ signal.signal(signal.SIGINT, signal_handler)
 
 while True:
     c = conn.cursor()
+    print "got cursor"
     humidity, temperature = Adafruit_DHT.read_retry(11, 4)
-    humidity2, temperature2 = Adafruit_DHT.read_retry(11, 3)
-
     print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature, humidity)
+    humidity2, temperature2 = Adafruit_DHT.read_retry(11, 3)
     print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature2, humidity2)
 
     tempavg = (temperature + temperature2) / 2.000
