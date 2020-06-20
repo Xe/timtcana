@@ -1,8 +1,8 @@
-use anyhow::{anyhow, Result};
-use chrono::{DateTime, Utc, NaiveDateTime};
+use anyhow::Result;
+use chrono::{DateTime, NaiveDateTime, Utc};
 use log::*;
 use serde::{Deserialize, Serialize};
-use std::{path::PathBuf, process::Command, thread, time};
+use std::process::Command;
 use structopt::StructOpt;
 use warp::Filter;
 
@@ -40,27 +40,18 @@ async fn main() -> Result<()> {
 
     let log = warp::log::custom(|info| {
         // Use a log macro, or slog, or println, or whatever!
-        info!(
-            "{} {} {}",
-            info.method(),
-            info.path(),
-            info.status(),
-        );
+        info!("{:?} {} {} {}", info.elapsed(), info.method(), info.path(), info.status());
     });
 
-    let current_temp = warp::path("now").map(|| {
-        match get_newest_temps("data.db".into()) {
-            Ok(temp) => {
-                warp::reply::json(&temp)
-            }
-            Err(why) => {
-                warp::reply::json(&Error{
-                    why: format!("{:?}", why),
-                    kind: "temperature error".into(),
-                })
-            }
-        }
-    }).with(log);
+    let current_temp = warp::path("now")
+        .map(|| match get_newest_temps("data.db".into()) {
+            Ok(temp) => warp::reply::json(&temp),
+            Err(why) => warp::reply::json(&Error {
+                why: format!("{:?}", why),
+                kind: "temperature error".into(),
+            }),
+        })
+        .with(log);
 
     warp::serve(current_temp)
         .run(([0, 0, 0, 0], cmd.port))
@@ -86,7 +77,7 @@ fn get_newest_temps(db_fname: String) -> Result<Measure> {
     let naive = NaiveDateTime::from_timestamp(time, 0);
     let datetime: DateTime<Utc> = DateTime::from_utc(naive, Utc);
 
-    Ok(Measure{
+    Ok(Measure {
         time: datetime,
         temperature: temp.parse::<f32>()?,
         humidity: hum.parse::<f32>()?,
