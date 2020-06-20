@@ -23,9 +23,9 @@ while True:
     c = conn.cursor()
     print "got cursor"
     humidity, temperature = Adafruit_DHT.read_retry(11, 4)
-    print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature, humidity)
+    print '1: Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature, humidity)
     humidity2, temperature2 = Adafruit_DHT.read_retry(11, 3)
-    print 'Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature2, humidity2)
+    print '2: Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature2, humidity2)
 
     tempavg = (temperature + temperature2) / 2.000
     humavg = (humidity + humidity2) / 2.000
