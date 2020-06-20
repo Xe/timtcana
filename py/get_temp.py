@@ -7,7 +7,9 @@ import Adafruit_DHT
 
 print "logging temperature"
 
-conn = sqlite3.connect("data.db")
+conn = sqlite3.connect("/home/pi/weather/data.db")
+
+print "got connection to database"
 
 def signal_handler(sig, frame):
     conn.commit()
