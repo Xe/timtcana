@@ -38,6 +38,16 @@ async fn main() -> Result<()> {
     println!("starting: {:?}", cmd);
     println!("{:?}", get_newest_temps(cmd.db_loc.clone())?);
 
+    let log = warp::log::custom(|info| {
+        // Use a log macro, or slog, or println, or whatever!
+        info!(
+            "{} {} {}",
+            info.method(),
+            info.path(),
+            info.status(),
+        );
+    });
+
     let current_temp = warp::path("now").map(|| {
         match get_newest_temps("data.db".into()) {
             Ok(temp) => {
@@ -50,7 +60,7 @@ async fn main() -> Result<()> {
                 })
             }
         }
-    });
+    }).with(log);
 
     warp::serve(current_temp)
         .run(([0, 0, 0, 0], cmd.port))
@@ -67,7 +77,6 @@ fn get_newest_temps(db_fname: String) -> Result<Measure> {
 
     let mut stdout: String = String::from_utf8(output.stdout)?;
     stdout = stdout.trim().into();
-    println!("{}", stdout);
     let cols: Vec<&str> = stdout.split("|").collect();
     let time = cols[0];
     let temp = cols[1];
